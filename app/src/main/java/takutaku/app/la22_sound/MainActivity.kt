@@ -4,13 +4,14 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.widget.ImageView
 import takutaku.app.la22_sound.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var soundList :Array<MediaPlayer?>
+    private lateinit var soundList: Array<MediaPlayer?>
 
     val imagePlayingList = arrayListOf(
         R.drawable.drum_playing_image,
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         R.drawable.guitar_image,
         R.drawable.piano_image
     )
-    private lateinit var imageViewList:Array<ImageView>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(this.root) }
@@ -43,38 +44,32 @@ class MainActivity : AppCompatActivity() {
             binding.pianoImage
         )
 
-        imageViewList[0].setOnTouchListener{ view, motionEvent ->
-            touchImage(0,motionEvent)
-            true
-        }
-        imageViewList[1].setOnTouchListener{ view, motionEvent ->
-            touchImage(1,motionEvent)
-            true
-        }
-        imageViewList[2].setOnTouchListener{ view, motionEvent ->
-            touchImage(2,motionEvent)
-            true
-        }
-        imageViewList[3].setOnTouchListener{ view, motionEvent ->
-            touchImage(3,motionEvent)
-            true
+        imageViewList.forEachIndexed { index, imageView ->
+            imageView.setOnTouchListener(
+                TouchListener(index)
+            )
         }
     }
 
-    fun touchImage(number:Int,motionEvent:MotionEvent){
-            if(motionEvent.action == MotionEvent.ACTION_DOWN) {
+    private lateinit var imageViewList: Array<ImageView>
+    fun touchImage(number: Int, motionEvent: MotionEvent) {
+        if (motionEvent.action == MotionEvent.ACTION_DOWN) {
 
-                imageViewList[number].setImageResource((imagePlayingList[number]))
+            imageViewList[number].setImageResource((imagePlayingList[number]))
 
-                soundList[number]?.seekTo(0)
-                soundList[number]?.start()
-            }
+            soundList[number]?.seekTo(0)
+            soundList[number]?.start()
+        } else if (motionEvent.action == MotionEvent.ACTION_UP) {
 
-            else if (motionEvent.action == MotionEvent.ACTION_UP){
-
-                imageViewList[number].setImageResource(imageList[number])
-            }
+            imageViewList[number].setImageResource(imageList[number])
+        }
 
     }
 
+    private inner class TouchListener(val num: Int) : View.OnTouchListener {
+        override fun onTouch(view: View, event: MotionEvent): Boolean {
+            touchImage(num, event)
+            return true
+        }
+    }
 }
