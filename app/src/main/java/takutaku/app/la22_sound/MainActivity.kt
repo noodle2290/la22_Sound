@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         imageViewList.forEachIndexed { index, imageView ->
             imageView.setOnTouchListener(
-                TouchListener(index)
+                OnImageTouchListener(index)
             )
         }
     }
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private inner class TouchListener(val num: Int) : View.OnTouchListener {
+    private inner class OnImageTouchListener(val num: Int) : View.OnTouchListener {
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             touchImage(num, event)
             return true
