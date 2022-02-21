@@ -4,88 +4,77 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
+import android.widget.ImageView
 import takutaku.app.la22_sound.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
 
+    private lateinit var soundList :Array<MediaPlayer?>
+
+    val imagePlayingList = arrayListOf(
+        R.drawable.drum_playing_image,
+        R.drawable.cymbal_playing_image,
+        R.drawable.guitar_playing_image,
+        R.drawable.piano_playing_image
+    )
+    val imageList = arrayListOf(
+        R.drawable.drum_image,
+        R.drawable.cymbal_image,
+        R.drawable.guitar_image,
+        R.drawable.piano_image
+    )
+    private lateinit var imageViewList:Array<ImageView>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).apply { setContentView(this.root) }
 
-        val drumSound = MediaPlayer.create(this, R.raw.drum_sound)
-        val cymbalSound = MediaPlayer.create(this, R.raw.cymbal_sound)
-        val guitarSound = MediaPlayer.create(this, R.raw.guitar_sound)
-        val pianoSound = MediaPlayer.create(this, R.raw.piano_sound)
+        soundList = arrayOf(
+            MediaPlayer.create(this, R.raw.drum_sound),
+            MediaPlayer.create(this, R.raw.cymbal_sound),
+            MediaPlayer.create(this, R.raw.guitar_sound),
+            MediaPlayer.create(this, R.raw.piano_sound)
+        )
 
-        binding.drumImage.setOnTouchListener { view, event ->
+        imageViewList = arrayOf(
+            binding.drumImage,
+            binding.cymbalImage,
+            binding.guitarImage,
+            binding.pianoImage
+        )
 
-            if(event.action == MotionEvent.ACTION_DOWN) {
-
-                binding.drumImage.setImageResource((R.drawable.drum_playing_image))
-
-                drumSound.seekTo(0)
-                drumSound.start()
-            }
-
-            else if (event.action == MotionEvent.ACTION_UP){
-
-                binding.drumImage.setImageResource(R.drawable.drum_image)
-            }
+        imageViewList[0].setOnTouchListener{ view, motionEvent ->
+            touchImage(0,motionEvent)
             true
         }
-
-        binding.cymbalImage.setOnTouchListener { view, event ->
-
-            if(event.action == MotionEvent.ACTION_DOWN) {
-
-                binding.cymbalImage.setImageResource((R.drawable.cymbal_playing_image))
-
-                cymbalSound.seekTo(0)
-                cymbalSound.start()
-            }
-
-            else if (event.action == MotionEvent.ACTION_UP){
-
-                binding.cymbalImage.setImageResource(R.drawable.cymbal_image)
-            }
+        imageViewList[1].setOnTouchListener{ view, motionEvent ->
+            touchImage(1,motionEvent)
             true
         }
-
-        binding.guitarImage.setOnTouchListener { view, event ->
-
-            if(event.action == MotionEvent.ACTION_DOWN) {
-
-                binding.guitarImage.setImageResource((R.drawable.guitar_playing_image))
-
-                guitarSound.seekTo(0)
-                guitarSound.start()
-            }
-
-            else if (event.action == MotionEvent.ACTION_UP){
-
-                binding.guitarImage.setImageResource(R.drawable.guitar_image)
-            }
+        imageViewList[2].setOnTouchListener{ view, motionEvent ->
+            touchImage(2,motionEvent)
             true
         }
-
-        binding.pianoImage.setOnTouchListener { view, event ->
-
-            if(event.action == MotionEvent.ACTION_DOWN) {
-
-                binding.pianoImage.setImageResource((R.drawable.piano_playing_image))
-
-                pianoSound.seekTo(0)
-                pianoSound.start()
-            }
-
-            else if (event.action == MotionEvent.ACTION_UP){
-
-                binding.pianoImage.setImageResource(R.drawable.piano_image)
-            }
+        imageViewList[3].setOnTouchListener{ view, motionEvent ->
+            touchImage(3,motionEvent)
             true
         }
     }
 
+    fun touchImage(number:Int,motionEvent:MotionEvent){
+            if(motionEvent.action == MotionEvent.ACTION_DOWN) {
+
+                imageViewList[number].setImageResource((imagePlayingList[number]))
+
+                soundList[number]?.seekTo(0)
+                soundList[number]?.start()
+            }
+
+            else if (motionEvent.action == MotionEvent.ACTION_UP){
+
+                imageViewList[number].setImageResource(imageList[number])
+            }
+
+    }
 
 }
