@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.widget.ImageView
 import takutaku.app.la22_sound.databinding.ActivityMainBinding
 
@@ -43,25 +44,19 @@ class MainActivity : AppCompatActivity() {
             binding.pianoImage
         )
 
-        imageViewList[0].setOnTouchListener{ view, motionEvent ->
-            touchImage(0,motionEvent)
-            true
-        }
-        imageViewList[1].setOnTouchListener{ view, motionEvent ->
-            touchImage(1,motionEvent)
-            true
-        }
-        imageViewList[2].setOnTouchListener{ view, motionEvent ->
-            touchImage(2,motionEvent)
-            true
-        }
-        imageViewList[3].setOnTouchListener{ view, motionEvent ->
-            touchImage(3,motionEvent)
-            true
+        imageViewList.forEachIndexed { index, imageView ->
+            imageView.setOnTouchListener(
+                OnImageTouchListener(index)
+            )
         }
     }
 
-    fun touchImage(number:Int,motionEvent:MotionEvent){
+    // MainActivityの中にクラスを作成する
+    // View.OnTouchListenerインターフェースを継承する
+    private inner class OnImageTouchListener(val number: Int) : View.OnTouchListener {
+
+        // setOnTouchListenerの{}内に書いていた処理を書く
+        override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
             if(motionEvent.action == MotionEvent.ACTION_DOWN) {
 
                 imageViewList[number].setImageResource((imagePlayingList[number]))
@@ -74,7 +69,9 @@ class MainActivity : AppCompatActivity() {
 
                 imageViewList[number].setImageResource(imageList[number])
             }
-
+            return true
+        }
     }
 
 }
+
